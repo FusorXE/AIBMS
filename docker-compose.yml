@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  ingestion:
+    build: ./backend/services/ingestion
+    ports: [ "8001:8000" ]
+    environment:
+      - INFLUX_URL=http://influxdb:8086
+    depends_on: [ influxdb ]
+
+  api_gateway:
+    build: ./backend/services/api_gateway
+    ports: [ "8000:8000" ]
+    environment:
+      - JWT_SECRET=changeme
+
+  ml_engine:
+    build: ./backend/services/ml_engine
+    ports: [ "8002:8000" ]
+
+  frontend:
+    build: ./frontend/bms-dashboard
+    ports: [ "3000:80" ]
+
+  influxdb:
+    image: influxdb:2.7
+    ports: [ "8086:8086" ]
+  scheduler:
+    build: ./backend/services/scheduler
+    ports: ["8003:8000"]
