@@ -27,3 +27,14 @@ services:
   scheduler:
     build: ./backend/services/scheduler
     ports: ["8003:8000"]
+  mqtt:
+    image: eclipse-mosquitto:2
+    ports: ["1883:1883"]
+  mqtt_bridge:
+    build: ./backend/services/mqtt_bridge
+    environment:
+      - MQTT_BROKER=mqtt
+      - INGEST_URL=http://ingestion:8000/ingest
+    depends_on:
+      - mqtt
+      - ingestion
